@@ -1,4 +1,8 @@
-object SolveShapes extends App {
+import scala.swing.SimpleSwingApplication
+
+object SolveShapes extends SimpleSwingApplication {
+
+  def top = new MainWindow
 
   /** *
     * Convention
