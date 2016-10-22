@@ -1,8 +1,7 @@
-import scala.swing.SimpleSwingApplication
+package logic
 
-object SolveShapes extends SimpleSwingApplication {
+object GridSolver{
 
-  def top = new MainWindow
 
   /** *
     * Convention
@@ -13,6 +12,10 @@ object SolveShapes extends SimpleSwingApplication {
     */
 
   case class Coord(x: Int, y: Int)
+
+  def populateGrid(board: Array[Array[Int]]) : Unit = {
+    populateGrid(0, 0, board.size, board.size, board)
+  }
 
   def populateGrid(x: Int, y: Int, w: Int, h: Int, board: Array[Array[Int]]): Unit = {
 
@@ -42,10 +45,12 @@ object SolveShapes extends SimpleSwingApplication {
           populateGrid2x2(coord)
         } else {
           populateGrid(coord.x, coord.y, w/2, h/2, board)
+
           populateGrid(x + w/2 - 1, y + h/2 -1, 2, 2, board)
-          populateGrid(x + compl(coord.x, w/2), y, w/2, h/2, board)
-          populateGrid(x, y + compl(coord.y, h/2), w/2, h/2, board)
-          populateGrid(x + compl(coord.x, w/2), y + compl(coord.y, h/2), w/2, h/2, board)
+
+          populateGrid(x + compl(coord.x - x, w/2), coord.y, w/2, h/2, board)
+          populateGrid(coord.x, y + compl(coord.y - y, h/2), w/2, h/2, board)
+          populateGrid(x + compl(coord.x - x, w/2), y + compl(coord.y - y, h/2), w/2, h/2, board)
         }
       }
       case None =>

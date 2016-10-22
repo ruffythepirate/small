@@ -1,8 +1,10 @@
 package components
 
 import java.awt.geom.Rectangle2D
-import java.awt.{AlphaComposite, RenderingHints}
+import java.awt.{AlphaComposite, Color, RenderingHints}
 import javax.swing.JComponent
+
+import logic.GridSolver
 
 import scala.swing.event.{MouseClicked, MouseEntered, MousePressed}
 import scala.swing.{Component, Graphics2D}
@@ -25,6 +27,9 @@ class GridPanel extends Component{
   def generatePlayField(takenPoint : (Int, Int)) : Array[Array[Int]] = {
     val board = Array.ofDim[Int](gridSize, gridSize)
     board(takenPoint._1)(takenPoint._2) = 15
+
+    GridSolver.populateGrid(0, 0, gridSize, gridSize, board)
+
     board
   }
 
@@ -52,7 +57,9 @@ class GridPanel extends Component{
           if (board(i)(j) != 0) {
             val cValue = board(i)(j)
             if (cValue != 0) {
-              g2.setColor(foreground)
+              val tone = 256 * cValue / 16
+              val color = new Color(tone,tone,tone)
+              g2.setColor(color)
               g2.fillRect(i * w / gridSize, j * h / gridSize, w / gridSize, h / gridSize)
             }
           }

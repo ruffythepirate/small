@@ -1,3 +1,5 @@
+package windows
+
 import java.awt.{Color, Toolkit}
 
 import components.GridPanel
