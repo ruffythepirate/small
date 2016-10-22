@@ -53,14 +53,17 @@ class GridPanel extends Component{
         val w = size.width
         val h = size.height
 
+        g2.setColor(foreground)
+
         for (i <- 0 until board.size; j <- 0 until board(i).size) {
           if (board(i)(j) != 0) {
             val cValue = board(i)(j)
             if (cValue != 0) {
-              val tone = 256 * cValue / 16
-              val color = new Color(tone,tone,tone)
-              g2.setColor(color)
-              g2.fillRect(i * w / gridSize, j * h / gridSize, w / gridSize, h / gridSize)
+              drawWall(g2, i, j, cValue & 0x1 )
+              drawWall(g2, i, j, cValue & 0x2 )
+              drawWall(g2, i, j, cValue & 0x4 )
+              drawWall(g2, i, j, cValue & 0x8 )
+              //g2.fillRect(i * w / gridSize, j * h / gridSize, w / gridSize, h / gridSize)
             }
           }
         }
@@ -68,9 +71,36 @@ class GridPanel extends Component{
     }
   }
 
+  def cellWidth = size.width / gridSize
+
+  def cellHeight = size.height / gridSize
+
+  def drawHorizontalLine(g2 : Graphics2D, x:Int, y: Int): Unit = {
+    g2.drawLine(cellWidth * x, cellHeight * y, cellWidth * (x+1), cellHeight * y)
+  }
+
+  def drawVerticalLine(g2 : Graphics2D, x:Int, y: Int): Unit = {
+    g2.drawLine(cellWidth * x, cellHeight * y, cellWidth * x, cellHeight * (y+1))
+  }
+
+  def drawWall(g2 : Graphics2D, x: Int, y: Int, wall: Int): Unit = {
+    if(wall == 1) {
+      drawHorizontalLine(g2, x, y)
+    } else if(wall == 2) {
+      drawVerticalLine(g2, x, y)
+    } else if(wall == 4) {
+      drawVerticalLine(g2, x+1, y)
+    } else if(wall == 8) {
+      drawHorizontalLine(g2, x, y+1)
+    }
+  }
+
+
   def paintGrid(g2: Graphics2D): Unit = {
     val w = size.width
     val h = size.height
+    val transparent = new Color(foreground.getRed, foreground.getGreen, foreground.getBlue, 24)
+    g2.setColor(transparent)
     for (i <- 0 until gridSize) {
       val yStep = i * h / gridSize
       g2.drawLine(0, yStep, w, yStep)
@@ -86,6 +116,5 @@ class GridPanel extends Component{
     val shape = new Rectangle2D.Float(0, 0, size.width, size.height)
     g2.fill(shape)
 
-    g2.setColor(foreground)
   }
 }
